@@ -1,0 +1,23 @@
+Para criar a pasta app com o express-generator, foi necessário fazer algumas 
+alterações:
+- Mudar os paths dos módulos requiridos. Eles estavam sendo importados como se 
+estivessem globais, mas foi necessário especificar o caminho 
+
+
+var program = require('commander')  =>  var program = require('../../commander/index')
+var mkdirp = require('mkdirp')  =>  var mkdirp = require('../../mkdirp/index')
+
+- Comentar a validação do program.confirm, pois o métodos não estava sendo 
+encontrado. A validação confirmava se o usuário desejava criar o diretório
+mesmo de a pasta destino não estivesse vazia. Com a validação cometada, ele
+só cria mesmo assim.
+
+- A fs.writeFile estava declarada assim:
+fs.writeFile(arg1, arg2, { mode: mode || 0666 })
+
+Mas, na internet, constava que o terceiro parâmetro do método deve ser uma
+função, então ela foi redeclarada como um array function:
+fs.writeFile(arg1, arg2, () => {
+	return { mode: mode || 0666 }
+})
+
